@@ -22,7 +22,7 @@ FROM box AS box-desktop
 
 LABEL name="box-desktop"
 
-RUN paru -Syu xdg-desktop-portal-kde visual-studio-code-bin --noconfirm
+RUN pacman -Syu xdg-desktop-portal-kde --noconfirm
 
 RUN  rm -rf \
         /tmp/* \
