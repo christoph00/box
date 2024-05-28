@@ -6,15 +6,6 @@ COPY extra-packages /
 RUN grep -v '^#' /extra-packages | xargs pacman -Syu --noconfirm 
 RUN rm /extra-packages
 
-# Pacman Initialization
-RUN pacman-key --init && \
-    pacman-key --recv-key 3056513887B78AEB --keyserver keyserver.ubuntu.com && \
-    pacman-key --lsign-key 3056513887B78AEB && \
-    pacman -U 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-keyring.pkg.tar.zst' 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-mirrorlist.pkg.tar.zst' --noconfirm && \
-    printf "[chaotic-aur]\nInclude = /etc/pacman.d/chaotic-mirrorlist\n" | tee -a /etc/pacman.conf && \
-    pacman -Syu --noconfirm
-
-
 
 RUN   ln -fs /usr/bin/distrobox-host-exec /usr/local/bin/flatpak && \ 
       ln -fs /usr/bin/distrobox-host-exec /usr/local/bin/podman && \
@@ -42,6 +33,7 @@ USER build
 
 COPY desktop-packages /
 RUN grep -v '^#' /desktop-packages | xargs paru -Syu --noconfirm 
+RUN rm /desktop-packages
 
 
 
