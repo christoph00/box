@@ -1,10 +1,8 @@
 age
-atuin
 btop
 bat
 cosign
 direnv
-eza
 fzf
 github-cli
 helix
@@ -19,9 +17,7 @@ go
 python3
 ripgrep
 speedtest-cli
-starship
 wl-clipboard
-zellij
 zstd
 tmux
-fish
+nu
