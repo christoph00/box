@@ -35,11 +35,9 @@ USER build
 
 COPY desktop-packages /
 RUN grep -v '^#' /desktop-packages | xargs paru -Sy --noconfirm 
-RUN rm /desktop-packages
-
-
 
 USER root
+RUN rm /desktop-packages
 WORKDIR /
 
 # Cleanup
