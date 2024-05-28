@@ -11,7 +11,9 @@ RUN rm /extra-packages
 RUN   ln -fs /usr/bin/distrobox-host-exec /usr/local/bin/flatpak && \ 
       ln -fs /usr/bin/distrobox-host-exec /usr/local/bin/podman && \
       ln -fs /usr/bin/distrobox-host-exec /usr/local/bin/rpm-ostree && \
-      ln -fs /usr/bin/distrobox-host-exec /usr/local/bin/transactional-update
+      ln -fs /usr/bin/distrobox-host-exec /usr/local/bin/transactional-update &&\
+      ln -fs /usr/bin/distrobox-host-exec /usr/local/bin/systemctl
+
      
 RUN  rm -rf \
       /tmp/* \
