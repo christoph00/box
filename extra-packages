@@ -5,13 +5,11 @@ bat
 cosign
 direnv
 eza
-ffmpeg
 fzf
 github-cli
 helix
 just
 make
-micro
 ncdu
 ncurses
 neofetch

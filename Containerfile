@@ -22,7 +22,6 @@ FROM box AS box-desktop
 
 LABEL name="box-desktop"
 
-RUN pacman -Rnsdd xcursor-breeze --noconfirm
 RUN paru -Syu xdg-desktop-portal-kde visual-studio-code-bin --noconfirm
 
 RUN  rm -rf \
