@@ -3,7 +3,7 @@ FROM ghcr.io/ublue-os/arch-distrobox AS box
 LABEL com.github.containers.toolbox="true"
 
 COPY extra-packages /
-RUN grep -v '^#' /extra-packages | xargs pacman -S --noconfirm 
+RUN grep -v '^#' /extra-packages | xargs pacman -Syu --noconfirm 
 RUN rm /extra-packages
 
 RUN curl -L https://fly.io/install.sh | sh
@@ -34,7 +34,7 @@ RUN useradd -m --shell=/bin/bash build && usermod -L build && \
 USER build
 
 COPY desktop-packages /
-RUN grep -v '^#' /desktop-packages | xargs paru -S --noconfirm 
+RUN grep -v '^#' /desktop-packages | xargs paru -Sy --noconfirm 
 RUN rm /desktop-packages
 
 
