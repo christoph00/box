@@ -20,4 +20,4 @@ speedtest-cli
 wl-clipboard
 zstd
 tmux
-nu
+nushell
