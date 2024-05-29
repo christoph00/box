@@ -60,6 +60,7 @@ RUN dnf install -y      \
     coreos-installer    \
     direnv              \
     btop                \
+    xdg-desktop-portal-kde \
     qt-virt-manager     \
     code                \
     /tmp/thorium.rpm    \
