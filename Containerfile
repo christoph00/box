@@ -62,10 +62,14 @@ RUN dnf install -y      \
     btop                \
     xdg-desktop-portal-kde \
     qt-virt-manager     \
+    krfb                \
+    kalk                \
     code                \
     merkuro             \
     okular              \
     gwenview            \
+    skrooge             \
+    ksystemlog  \    
     /tmp/thorium.rpm    \
     /tmp/wezterm.rpm
 
