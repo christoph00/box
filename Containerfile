@@ -40,6 +40,8 @@ RUN dnf install -y      \
     jq                  \
     git                 \
     gitk                \
+    fastfetch           \
+    tmux                \
     git-lfs             \  
     gnupg2              \
     info                \
