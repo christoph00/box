@@ -63,6 +63,9 @@ RUN dnf install -y      \
     xdg-desktop-portal-kde \
     qt-virt-manager     \
     code                \
+    merkuro             \
+    okular              \
+    gwenview            \
     /tmp/thorium.rpm    \
     /tmp/wezterm.rpm
 
