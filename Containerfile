@@ -6,6 +6,9 @@ LABEL com.github.containers.toolbox="true" \
       usage="This image is meant to be used by distrobox -i <image-name> <container-name>"
 
 
+VOLUME [ "/nix" ]
+
+
 COPY ["vscode.repo", "/etc/yum.repos.d/"]
 
 RUN wget -O /tmp/thorium.rpm `curl -s https://api.github.com/repos/Alex313031/thorium/releases/latest| grep browser_download_url | grep '_AVX2.rpm' | head -n 1 | cut -d '"' -f 4` && \
@@ -56,10 +59,18 @@ RUN dnf install -y      \
     butane              \
     coreos-installer    \
     direnv              \
+    btop                \
     qt-virt-manager     \
     code                \
     /tmp/thorium.rpm    \
     /tmp/wezterm.rpm
+
+RUN /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+RUN curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- install linux \
+    --extra-conf "sandbox = false" \
+    --no-start-daemon \
+    --no-confirm
 
 RUN ln -s /usr/bin/host-spawn           /usr/local/bin/distrobox            && \
     ln -s /usr/bin/host-spawn           /usr/local/bin/fwupdmgr             && \
