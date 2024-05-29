@@ -61,9 +61,6 @@ RUN dnf install -y      \
     /tmp/thorium.rpm    \
     /tmp/wezterm.rpm
 
-COPY container_bin/* /usr/local/bin
-RUN chmod +x /usr/local/bin/*
-
 RUN ln -s /usr/bin/host-spawn           /usr/local/bin/distrobox            && \
     ln -s /usr/bin/host-spawn           /usr/local/bin/fwupdmgr             && \
     ln -s /usr/bin/host-spawn           /usr/local/bin/podman               && \
