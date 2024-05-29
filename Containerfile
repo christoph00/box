@@ -69,5 +69,4 @@ RUN ln -s /usr/bin/host-spawn           /usr/local/bin/distrobox            && \
     ln -s /usr/bin/host-spawn           /usr/local/bin/tailscale
 
 
-# cleanup
 RUN dnf clean all
