@@ -56,6 +56,8 @@ RUN dnf install -y      \
     butane              \
     coreos-installer    \
     direnv              \
+    qt-virt-manager     \
+    code                \
     /tmp/thorium.rpm    \
     /tmp/wezterm.rpm
 
