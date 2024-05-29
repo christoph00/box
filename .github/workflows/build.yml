@@ -38,21 +38,25 @@ jobs:
         if: github.event_name != 'pull_request'
         uses: sigstore/cosign-installer@v3
 
-      - name: Extract Docker metadata
+      - name: Determine image name & tag
         id: meta
-        uses: docker/metadata-action@v5 # v5.0.0
-        with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-          tags: |
-            type=raw,value=${{ github.sha }}
-            type=edge,branch=main
-            type=semver,pattern={{version}},prefix=v
-            type=semver,pattern={{major}}.{{minor}},prefix=v
-            type=semver,pattern={{major}},enable=${{ !startsWith(github.ref, 'refs/tags/v0.') }},prefix=v
-            type=schedule
-            type=ref,event=branch
-            type=ref,event=tag
-            type=ref,event=pr
+        shell: bash
+        run: |
+          set -euxo pipefail
+          if [ "$GITHUB_EVENT_NAME" == "release" ]; then
+            IMAGE_TAG="${GITHUB_REF##*/}"
+          else
+            IMAGE_TAG="$(git rev-parse --short "$GITHUB_SHA")"
+          fi
+          IMAGE_TAG="${IMAGE_TAG,,}"
+          IMAGE_NAME="${GITHUB_REPOSITORY,,}/server"
+
+          echo "Building ${IMAGE_NAME}:${IMAGE_TAG}"
+
+          echo "tag=${IMAGE_TAG}" >> "$GITHUB_OUTPUT"
+          echo "name=${IMAGE_NAME}" >> "$GITHUB_OUTPUT"
+          echo "repo=${GITHUB_REPOSITORY}" >> "$GITHUB_OUTPUT"
+          echo "repo_ref=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> "$GITHUB_OUTPUT"
     
       - name: Build Image
         id: build_image
@@ -60,10 +64,12 @@ jobs:
         with:
           containerfiles: |
             ./Containerfile
-          image: ${{ env.IMAGE_NAME }}
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+          image: ${{ steps.meta.outputs.name }}
+          tags: ${{ steps.meta.outputs.tag }} ${{ github.event_name == 'release' && 'latest' || 'staging' }}
           oci: false
+          build-args: |
+            REPO=${{ steps.meta.outputs.repo }}
+            REPO_REF=${{ steps.meta.outputs.repo_ref }}
       - name: Push image to ghcr.io
         id: push
         uses: redhat-actions/push-to-registry@v2
