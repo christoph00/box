@@ -2,4 +2,6 @@ xdg-desktop-portal-kde
 wezterm
 aur/visual-studio-code-bin
 aur/thorium-browser-bin
+#aur/coreos-installer
+#aur/butane
 virt-manager

@@ -1,60 +1,78 @@
-FROM ghcr.io/ublue-os/arch-distrobox AS box
+ARG base_tag=40
+ARG base_image=registry.fedoraproject.org/fedora-toolbox
+FROM ${base_image}:${base_tag}
 
-LABEL com.github.containers.toolbox="true"
-
-COPY extra-packages /
-RUN grep -v '^#' /extra-packages | xargs pacman -Syu --noconfirm 
-RUN rm /extra-packages
-
-RUN curl -L https://fly.io/install.sh | sh
+LABEL com.github.containers.toolbox="true" \
+      usage="This image is meant to be used by distrobox -i <image-name> <container-name>"
 
 
-RUN   ln -fs /usr/bin/distrobox-host-exec /usr/local/bin/flatpak && \ 
-      ln -fs /usr/bin/distrobox-host-exec /usr/local/bin/podman && \
-      ln -fs /usr/bin/distrobox-host-exec /usr/local/bin/rpm-ostree && \
-      ln -fs /usr/bin/distrobox-host-exec /usr/local/bin/transactional-update &&\
-      ln -fs /usr/bin/distrobox-host-exec /usr/local/bin/systemctl
-
-     
-RUN  rm -rf \
-      /tmp/* \
-      /var/cache/pacman/pkg/*
+COPY ["vscode.repo", "/etc/yum.repos.d/"]
 
 
-FROM quay.io/coreos/butane:release AS butane
-FROM quay.io/coreos/coreos-installer:release as coreos-installer
+RUN THORIUM_VER=$(curl -sL https://api.github.com/repos/Alex313031/thorium/releases/latest | jq -r '.assets[] | select(.name? | match(".*_AVX2.rpm$")) | .browser_download_url') \
+    curl -sL -o /tmp/thorium.rpm ${THORIUM_VER}
 
-COPY --from=butane /usr/local/bin/butane /usr/local/bin/butane
-COPY --from=coreos-installer /sbin/coreos-installer /usr/local/bin/coreos-installer
-
-
-#####   desktop ####
-FROM box AS box-desktop
-
-LABEL name="box-desktop"
-
-# Create build user
-RUN useradd -m --shell=/bin/bash build && usermod -L build && \
-    echo "build ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers && \
-    echo "root ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+RUN WEZTERM_VER=$(curl -sL https://api.github.com/repos/wez/wezterm/releases/latest | jq -r '.assets[] | select(.name? | match(".*fedora39.x86_64.rpm$")) | .browser_download_url') \
+    curl -sL -o /tmp/wezterm.rpm ${WEZTERM_VER}
 
 
-USER build
+RUN dnf update -y && dnf upgrade -y
 
-COPY desktop-packages /
-RUN grep -v '^#' /desktop-packages | xargs paru -Sy --noconfirm 
+RUN dnf install -y man
 
-USER root
-RUN rm /desktop-packages
-WORKDIR /
+RUN dnf reinstall -y    \
+    authselect          \
+    authselect-libs     \
+    ca-certificates     \
+    cracklib-runtime    \
+    crypto-policies     \
+    expat               \
+    filesystem          \
+    file-libs           \
+    libarchive          \
+    libpwquality        \
+    libsemanage         \
+    pcre2-syntax        \
+    shadow-utils
 
-# Cleanup
-RUN  sed -i 's/-march=x86-64 -mtune=generic/-march=native -mtune=native/g' /etc/makepkg.conf && \
-    userdel -r build && \
-    rm -drf /home/build && \
-    sed -i '/build ALL=(ALL) NOPASSWD: ALL/d' /etc/sudoers && \
-    sed -i '/root ALL=(ALL) NOPASSWD: ALL/d' /etc/sudoers && \
-    rm -rf \
-        /tmp/* \
-        /var/cache/pacman/pkg/*
+RUN dnf install -y      \
+    bash-completion     \
+    bind-utils          \
+    jq                  \
+    git                 \
+    gitk                \
+    git-lfs             \  
+    gnupg2              \
+    info                \
+    iproute             \
+    iputils             \
+    make                \
+    man                 \
+    netcat              \
+    net-tools           \
+    nmap                \
+    openssl             \
+    traceroute          \
+    unzip               \
+    wget                \
+    which               \
+    nu                  \
+    butane              \
+    coreos-installer    \
+    direnv              \
+    /tmp/thorium.rpm    \
+    /rmp/wezterm.rpm
 
+COPY container_bin/* /usr/local/bin
+RUN chmod +x /usr/local/bin/*
+
+RUN ln -s /usr/bin/host-spawn           /usr/local/bin/distrobox            && \
+    ln -s /usr/bin/host-spawn           /usr/local/bin/fwupdmgr             && \
+    ln -s /usr/bin/host-spawn           /usr/local/bin/podman               && \
+    ln -s /usr/bin/host-spawn           /usr/local/bin/rpm-ostree           && \
+    ln -s /usr/bin/host-spawn           /usr/local/bin/systemctl            && \
+    ln -s /usr/bin/host-spawn           /usr/local/bin/tailscale
+
+
+# cleanup
+RUN dnf clean all
