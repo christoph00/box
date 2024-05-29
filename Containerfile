@@ -20,6 +20,14 @@ RUN  rm -rf \
       /tmp/* \
       /var/cache/pacman/pkg/*
 
+
+FROM quay.io/coreos/butane:release AS butane
+FROM quay.io/coreos/coreos-installer:release as coreos-installer
+
+COPY --from=butane /usr/local/bin/butane /usr/local/bin/butane
+COPY --from=coreos-installer /sbin/coreos-installer /usr/local/bin/coreos-installer
+
+
 #####   desktop ####
 FROM box AS box-desktop
 
