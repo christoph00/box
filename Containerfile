@@ -8,12 +8,8 @@ LABEL com.github.containers.toolbox="true" \
 
 COPY ["vscode.repo", "/etc/yum.repos.d/"]
 
-
-RUN THORIUM_VER=$(curl -sL https://api.github.com/repos/Alex313031/thorium/releases/latest | jq -r '.assets[] | select(.name? | match(".*_AVX2.rpm$")) | .browser_download_url') \
-    curl -sL -o /tmp/thorium.rpm ${THORIUM_VER}
-
-RUN WEZTERM_VER=$(curl -sL https://api.github.com/repos/wez/wezterm/releases/latest | jq -r '.assets[] | select(.name? | match(".*fedora39.x86_64.rpm$")) | .browser_download_url') \
-    curl -sL -o /tmp/wezterm.rpm ${WEZTERM_VER}
+RUN wget -O /tmp/thorium.rpm `curl -s https://api.github.com/repos/Alex313031/thorium/releases/latest| grep browser_download_url | grep '_AVX2.rpm' | head -n 1 | cut -d '"' -f 4` && \
+    wget -O /tmp/wezterm.rpm `curl -s https://api.github.com/repos/wez/wezterm/releases/latest | grep browser_download_url | grep 'fedora39.x86_64.rpm' | head -n 1 | cut -d '"' -f 4`
 
 
 RUN dnf update -y && dnf upgrade -y
