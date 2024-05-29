@@ -57,7 +57,7 @@ RUN dnf install -y      \
     coreos-installer    \
     direnv              \
     /tmp/thorium.rpm    \
-    /rmp/wezterm.rpm
+    /tmp/wezterm.rpm
 
 COPY container_bin/* /usr/local/bin
 RUN chmod +x /usr/local/bin/*
