@@ -41,6 +41,9 @@ RUN dnf install -y      \
     git                 \
     gitk                \
     fastfetch           \
+    helix               \
+    python3             \
+    golang              \
     tmux                \
     git-lfs             \  
     gnupg2              \
@@ -71,17 +74,17 @@ RUN dnf install -y      \
     okular              \
     gwenview            \
     skrooge             \
-    ksystemlog  \    
+    ksystemlog          \    
     /tmp/thorium.rpm    \
     /tmp/wezterm.rpm
 
 # as user
 #RUN /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
-# RUN curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- install linux \
-#     --extra-conf "sandbox = false" \
-#     --no-start-daemon \
-#     --no-confirm
+RUN curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- install linux \
+     --extra-conf "sandbox = false" \
+     --no-start-daemon \
+     --no-confirm
 
 RUN ln -s /usr/bin/host-spawn           /usr/local/bin/distrobox            && \
     ln -s /usr/bin/host-spawn           /usr/local/bin/fwupdmgr             && \
