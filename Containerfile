@@ -75,7 +75,7 @@ RUN dnf install -y      \
     direnv              \
     btop                \
     xdg-desktop-portal-kde \
-    qt-virt-manager     \
+    virt-manager     \
     krfb                \
     kalk                \
     foot                \
@@ -87,7 +87,8 @@ RUN dnf install -y      \
     skrooge             \
     ksystemlog          \    
     /tmp/thorium.rpm    \
-    /tmp/wezterm.rpm
+    /tmp/wezterm.rpm    \\
+    && dnf clean all && rm /tmp/*.rpm
 
 # as user
 #RUN /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
@@ -107,6 +108,3 @@ RUN ln -s /usr/bin/host-spawn           /usr/local/bin/distrobox            && \
     ln -s /usr/bin/host-spawn           /usr/local/bin/rpm-ostree           && \
     ln -s /usr/bin/host-spawn           /usr/local/bin/systemctl            && \
     ln -s /usr/bin/host-spawn           /usr/local/bin/tailscale
-
-
-RUN dnf clean all
