@@ -50,6 +50,7 @@ RUN dnf install -y      \
     gitk                \
     fastfetch           \
     helix               \
+    bat \
     python3             \
     golang              \
     cargo               \
@@ -73,6 +74,7 @@ RUN dnf install -y      \
     butane              \
     coreos-installer    \
     direnv              \
+    podman-tui          \
     btop                \
     xdg-desktop-portal-kde \
     virt-manager     \
