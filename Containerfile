@@ -49,7 +49,6 @@ RUN dnf install -y      \
     git                 \
     gitk                \
     fastfetch           \
-    starship            \
     helix               \
     python3             \
     golang              \
