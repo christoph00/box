@@ -1,6 +1,8 @@
 ARG base_tag=40
 ARG base_image=registry.fedoraproject.org/fedora-toolbox
 FROM ${base_image}:${base_tag}
+FROM docker.io/library/rust:latest AS rust
+
 
 LABEL com.github.containers.toolbox="true" \
       usage="This image is meant to be used by distrobox -i <image-name> <container-name>"
@@ -8,6 +10,12 @@ LABEL com.github.containers.toolbox="true" \
 
 VOLUME [ "/nix" ]
 
+
+COPY --from=rust \
+	/usr/local/cargo/bin/rustc \
+	/usr/local/cargo/bin/rustup \
+	/usr/local/cargo/bin/cargo \
+	/usr/bin/
 
 COPY ["vscode.repo", "/etc/yum.repos.d/"]
 
@@ -41,9 +49,11 @@ RUN dnf install -y      \
     git                 \
     gitk                \
     fastfetch           \
+    starship            \
     helix               \
     python3             \
     golang              \
+    cargo               \
     tmux                \
     git-lfs             \  
     gnupg2              \
@@ -69,6 +79,8 @@ RUN dnf install -y      \
     qt-virt-manager     \
     krfb                \
     kalk                \
+    foot                \
+    foot-terminfo       \
     code                \
     merkuro             \
     okular              \
@@ -81,10 +93,14 @@ RUN dnf install -y      \
 # as user
 #RUN /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
-RUN curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- install linux \
-     --extra-conf "sandbox = false" \
-     --no-start-daemon \
-     --no-confirm
+# RUN curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- install linux \
+#      --extra-conf "sandbox = false" \
+#      --no-start-daemon \
+#      --no-confirm
+
+RUN curl -sS https://starship.rs/install.sh | sh /dev/stdin --yes
+
+RUN go install golang.org/x/tools/gopls@latest
 
 RUN ln -s /usr/bin/host-spawn           /usr/local/bin/distrobox            && \
     ln -s /usr/bin/host-spawn           /usr/local/bin/fwupdmgr             && \
