@@ -87,7 +87,7 @@ RUN dnf install -y      \
     skrooge             \
     ksystemlog          \    
     /tmp/thorium.rpm    \
-    /tmp/wezterm.rpm    \\
+    /tmp/wezterm.rpm    \
     && dnf clean all && rm /tmp/*.rpm
 
 # as user
