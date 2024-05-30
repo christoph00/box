@@ -1,7 +1,7 @@
 ARG base_tag=40
 ARG base_image=registry.fedoraproject.org/fedora-toolbox
-FROM ${base_image}:${base_tag}
 FROM docker.io/library/rust:latest AS rust
+FROM ${base_image}:${base_tag}
 
 
 LABEL com.github.containers.toolbox="true" \
