@@ -71,6 +71,7 @@ RUN dnf install -y      \
     wget                \
     which               \
     nu                  \
+    just                \
     butane              \
     coreos-installer    \
     direnv              \
