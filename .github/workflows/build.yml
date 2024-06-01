@@ -63,7 +63,7 @@ jobs:
             ./Containerfile
           image: ${{ steps.meta.outputs.name }}
           tags: ${{ steps.meta.outputs.tag }} ${{ github.event_name == 'release' && 'latest' || 'staging' }}
-          oci: false
+          oci: true
           build-args: |
             REPO=${{ steps.meta.outputs.repo }}
             REPO_REF=${{ steps.meta.outputs.repo_ref }}
