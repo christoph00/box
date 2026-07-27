@@ -69,7 +69,7 @@ jobs:
             REPO_REF=${{ steps.meta.outputs.repo_ref }}
       - name: Push image to ghcr.io
         id: push
-        uses: redhat-actions/push-to-registry@v2
+        uses: redhat-actions/push-to-registry@v3
         with:
           tags: ${{ steps.build_image.outputs.tags }}
           image: ${{ steps.build_image.outputs.image }}
